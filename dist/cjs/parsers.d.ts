@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Buffer } from "buffer";
 import { PublicKey, TransactionInstruction, Connection, Message, ParsedMessage, ParsedInstruction as SolanaParsedInstruction, Finality, VersionedMessage, LoadedAddresses, VersionedTransactionResponse, ParsedTransactionWithMeta } from "@solana/web3.js";
 import { Idl } from "@project-serum/anchor";
@@ -13,6 +12,7 @@ import { InstructionNames, InstructionParserInfo, ParsedInstruction, ParserFunct
  */
 export declare class SolanaParser {
     private instructionParsers;
+    private instructionDecoders;
     /**
      * Initializes parser object
      * `SystemProgram`, `TokenProgram` and `AssociatedTokenProgram` are supported by default
@@ -33,6 +33,8 @@ export declare class SolanaParser {
      * @param idl IDL that describes anchor program
      */
     addParserFromIdl(programId: PublicKey | string, idl: Idl): void;
+    isParserAvailble(programId: PublicKey | string): boolean;
+    retrieveParserReadyProgramIds(): Array<string>;
     private buildIdlParser;
     /**
      * Removes parser for provided program id

@@ -1,13 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseLogs = exports.flattenParsedTransaction = exports.flattenTransactionResponse = exports.parsedInstructionToInstruction = exports.compiledInstructionToInstruction = exports.parseTransactionAccounts = exports.hexToBuffer = void 0;
+exports.hexToBuffer = hexToBuffer;
+exports.parseTransactionAccounts = parseTransactionAccounts;
+exports.compiledInstructionToInstruction = compiledInstructionToInstruction;
+exports.parsedInstructionToInstruction = parsedInstructionToInstruction;
+exports.flattenTransactionResponse = flattenTransactionResponse;
+exports.flattenParsedTransaction = flattenParsedTransaction;
+exports.parseLogs = parseLogs;
 const anchor_1 = require("@project-serum/anchor");
 const web3_js_1 = require("@solana/web3.js");
 function hexToBuffer(data) {
     const rawHex = data.startsWith("0x") ? data.slice(2) : data;
     return Buffer.from(rawHex);
 }
-exports.hexToBuffer = hexToBuffer;
 /**
  * Parse transaction message and extract account metas
  * @param message transaction message
@@ -35,7 +40,6 @@ function parseTransactionAccounts(message, loadedAddresses = undefined) {
         parsedAccounts = [...parsedAccounts, ...ALTReadOnly.map((pubkey) => ({ isSigner: false, isWritable: false, pubkey }))];
     return parsedAccounts;
 }
-exports.parseTransactionAccounts = parseTransactionAccounts;
 /**
  * Converts compiled instruction into common TransactionInstruction
  * @param compiledInstruction
@@ -66,7 +70,6 @@ function compiledInstructionToInstruction(compiledInstruction, parsedAccounts) {
         });
     }
 }
-exports.compiledInstructionToInstruction = compiledInstructionToInstruction;
 function parsedAccountsToMeta(accounts, accountMeta) {
     const meta = accountMeta.map((m) => ({ pk: m.pubkey.toString(), ...m }));
     return accounts.map((account) => {
@@ -84,7 +87,6 @@ function parsedInstructionToInstruction(parsedInstruction, accountMeta) {
         keys: parsedAccountsToMeta(parsedInstruction.accounts, accountMeta),
     });
 }
-exports.parsedInstructionToInstruction = parsedInstructionToInstruction;
 /**
  * Converts transaction response with CPI into artifical transaction that contains all instructions from tx and CPI
  * @param transaction transactionResponse to convert from
@@ -124,7 +126,6 @@ function flattenTransactionResponse(transaction) {
     }
     return result;
 }
-exports.flattenTransactionResponse = flattenTransactionResponse;
 function flattenParsedTransaction(transaction) {
     var _a, _b;
     const result = [];
@@ -159,7 +160,6 @@ function flattenParsedTransaction(transaction) {
     }
     return result;
 }
-exports.flattenParsedTransaction = flattenParsedTransaction;
 /**
  * @private
  */
@@ -185,7 +185,7 @@ function newLogContext(programId, depth, id, instructionIndex) {
  * @returns parsed logs with call depth and additional context
  */
 function parseLogs(logs) {
-    const parserRe = /(?<logTruncated>^Log truncated$)|(?<programInvoke>^Program (?<invokeProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) invoke \[(?<level>\d+)\]$)|(?<programSuccessResult>^Program (?<successResultProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) success$)|(?<programFailedResult>^Program (?<failedResultProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) failed: (?<failedResultErr>.*)$)|(?<programCompleteFailedResult>^Program failed to complete: (?<failedCompleteError>.*)$)|(?<programLog>^^Program log: (?<logMessage>.*)$)|(?<programData>^Program data: (?<data>.*)$)|(?<programConsumed>^Program (?<consumedProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) consumed (?<consumedComputeUnits>\d*) of (?<allComputedUnits>\d*) compute units$)|(?<programReturn>^Program return: (?<returnProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) (?<returnMessage>.*)$)/s;
+    const parserRe = /(?<logTruncated>^Log truncated$)|(?<programInvoke>^Program (?<invokeProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) invoke \[(?<level>\d+)\]$)|(?<programSuccessResult>^Program (?<successResultProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) success$)|(?<programFailedResult>^Program (?<failedResultProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) failed: (?<failedResultErr>.*)$)|(?<programCompleteFailedResult>^Program failed to complete: (?<failedCompleteError>.*)$)|(?<programLog>^^Program log: (?<logMessage>.*)$)|(?<programData>^Program data: (?<data>.*)$)|(?<programConsumed>^Program (?<consumedProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) consumed (?<consumedComputeUnits>\d*) of (?<allComputedUnits>\d*) compute units$)|(?<programReturn>^Program return: (?<returnProgramId>[1-9A-HJ-NP-Za-km-z]{32,}) (?<returnMessage>.*)$)|(?<insufficientLamports>^Transfer: insufficient lamports)|(?<programConsumption>^Program consumption: (?<unitsRemaining>\d+) units remaining$)/s;
     const result = [];
     let id = -1;
     let currentInstruction = 0;
@@ -250,8 +250,10 @@ function parseLogs(logs) {
                 throw new Error("[InvokeReturn]: callstack mismatch");
             result[callIds[callIds.length - 1]].invokeResult = match.groups.returnMessage;
         }
+        else if (match.groups.insufficientLamports) {
+            result[callIds[callIds.length - 1]].rawLogs.push(log);
+        }
     }
     return result;
 }
-exports.parseLogs = parseLogs;
 //# sourceMappingURL=helpers.js.map
