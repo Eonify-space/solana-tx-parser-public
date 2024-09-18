@@ -49,12 +49,7 @@ import {
 } from "./helpers";
 import {
 	decodeSetTransferFeeInstruction,
-	emitLayout,
 	getAccountDataSizeLayout,
-	metadataLayout,
-	removeKeyLayout,
-	updateAuthorityLayout,
-	updateMetadataLayout,
 } from "./programs/token-extensions";
 
 const MEMO_PROGRAM_V1 = "Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo";
@@ -1255,77 +1250,8 @@ function decodeToken2022Instruction(instruction: TransactionInstruction): Parsed
 		default: {
 			const discriminator = instruction.data.slice(0, 8).toString("hex");
 			switch (discriminator) {
-				case splDiscriminate("spl_token_metadata_interface:initialize_account").toString("hex"): {
-					const metadata = metadataLayout.decode(instruction.data);
-					parsed = {
-						name: "initializeMetadata",
-						accounts: [
-							{ name: "metadata", ...instruction.keys[0] },
-							{ name: "updateAuthority", ...instruction.keys[1] },
-							{ name: "mint", ...instruction.keys[2] },
-							{ name: "mintAuthority", ...instruction.keys[3] },
-						],
-						args: {
-							name: metadata.name,
-							symbol: metadata.symbol,
-							uri: metadata.uri,
-						},
-					} as unknown as ParsedIdlInstruction<any>;
-					break;
-				}
-				case splDiscriminate("spl_token_metadata_interface:updating_field").toString("hex"): {
-					const data = updateMetadataLayout.decode(instruction.data);
-					parsed = {
-						name: "updateField",
-						accounts: [
-							{ name: "metadata", ...instruction.keys[0] },
-							{ name: "updateAuthority", ...instruction.keys[1] },
-						],
-						args: {
-							field: data.field,
-							value: data.value,
-						},
-					} as unknown as ParsedIdlInstruction<any>;
-					break;
-				}
-				case splDiscriminate("spl_token_metadata_interface:remove_key_ix").toString("hex"): {
-					const data = removeKeyLayout.decode(instruction.data);
-					parsed = {
-						name: "removeKey",
-						accounts: [
-							{ name: "metadata", ...instruction.keys[0] },
-							{ name: "updateAuthority", ...instruction.keys[1] },
-						],
-						args: {
-							idempotent: data.idempotent,
-							value: data.key,
-						},
-					} as unknown as ParsedIdlInstruction<any>;
-					break;
-				}
-				case splDiscriminate("spl_token_metadata_interface:update_the_authority").toString("hex"): {
-					const data = updateAuthorityLayout.decode(instruction.data);
-					parsed = {
-						name: "updateAuthority",
-						accounts: [
-							{ name: "metadata", ...instruction.keys[0] },
-							{ name: "oldAuthority", ...instruction.keys[1] },
-						],
-						args: {
-							newAuthority: new PublicKey(data.newAuthority),
-						},
-					} as unknown as ParsedIdlInstruction<any>;
-					break;
-				}
-				case splDiscriminate("spl_token_metadata_interface:emitter").toString("hex"): {
-					const data = emitLayout.decode(instruction.data);
-					parsed = {
-						name: "emit",
-						accounts: [{ name: "metadata", ...instruction.keys[0] }],
-						args: data,
-					} as unknown as ParsedIdlInstruction<any>;
-					break;
-				}
+				
+				
 				default:
 					parsed = null;
 			}

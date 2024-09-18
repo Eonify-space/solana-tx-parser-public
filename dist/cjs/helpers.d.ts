@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { AccountMeta, CompiledInstruction, LoadedAddresses, Message, MessageCompiledInstruction, ParsedInstruction as SolanaParsedInstruction, ParsedTransactionWithMeta, PartiallyDecodedInstruction, PublicKey, TransactionInstruction, VersionedMessage, VersionedTransactionResponse } from "@solana/web3.js";
 import { LogContext } from "./interfaces";
 export declare function hexToBuffer(data: string): Buffer;

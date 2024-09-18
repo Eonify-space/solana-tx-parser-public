@@ -1,8 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setTransferFeeInstructionData = void 0;
-exports.decodeSetTransferFeeInstruction = decodeSetTransferFeeInstruction;
-exports.decodeSetTransferFeeInstructionUnchecked = decodeSetTransferFeeInstructionUnchecked;
+exports.decodeSetTransferFeeInstructionUnchecked = exports.decodeSetTransferFeeInstruction = exports.setTransferFeeInstructionData = void 0;
 const buffer_layout_1 = require("@solana/buffer-layout");
 const buffer_layout_utils_1 = require("@solana/buffer-layout-utils");
 const spl_token_1 = require("@solana/spl-token");
@@ -40,6 +38,7 @@ function decodeSetTransferFeeInstruction(instruction, programId) {
         data,
     };
 }
+exports.decodeSetTransferFeeInstruction = decodeSetTransferFeeInstruction;
 /**
  * Decode a SetTransferFee instruction without validating it
  *
@@ -64,4 +63,5 @@ function decodeSetTransferFeeInstructionUnchecked({ programId, keys: [mint, auth
         },
     };
 }
+exports.decodeSetTransferFeeInstructionUnchecked = decodeSetTransferFeeInstructionUnchecked;
 //# sourceMappingURL=transfer-fee-extension.js.map

@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { Buffer } from "buffer";
 import { PublicKey, TransactionInstruction, Connection, Message, ParsedMessage, ParsedInstruction as SolanaParsedInstruction, Finality, VersionedMessage, LoadedAddresses, VersionedTransactionResponse, ParsedTransactionWithMeta } from "@solana/web3.js";
 import { Idl } from "@project-serum/anchor";

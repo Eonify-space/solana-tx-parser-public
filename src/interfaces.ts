@@ -28,7 +28,10 @@ export type InstructionParsers = Map<PublicKey | string, ParserFunction<Idl, str
 /**
  * Function that takes transaction ix and returns parsed variant
  */
-export type ParserFunction<I extends Idl, IxName extends InstructionNames<I>> = (arg: TransactionInstruction, decoder: BorshInstructionCoder) => ParsedInstruction<I, IxName>;
+export type ParserFunction<I extends Idl, IxName extends InstructionNames<I>> = (
+	arg: TransactionInstruction,
+	decoder: BorshInstructionCoder,
+) => ParsedInstruction<I, IxName>;
 
 /**
  * public key as base58 string, parser
@@ -116,18 +119,18 @@ type IdlType = Idl["instructions"][number]["args"][number]["type"];
 export type DecodeType<T extends IdlType, Defined> = T extends keyof TypeMap
 	? TypeMap[T]
 	: T extends { defined: keyof Defined }
-	? Defined[T["defined"]]
-	: T extends { option: { defined: keyof Defined } }
-	? Defined[T["option"]["defined"]]
-	: T extends { option: keyof TypeMap }
-	? TypeMap[T["option"]]
-	: T extends { vec: keyof TypeMap }
-	? TypeMap[T["vec"]][]
-	: T extends { vec: keyof Defined }
-	? Defined[T["vec"]][]
-	: T extends { array: [defined: keyof TypeMap, size: number] }
-	? TypeMap[T["array"][0]][]
-	: unknown;
+		? Defined[T["defined"]]
+		: T extends { option: { defined: keyof Defined } }
+			? Defined[T["option"]["defined"]]
+			: T extends { option: keyof TypeMap }
+				? TypeMap[T["option"]]
+				: T extends { vec: keyof TypeMap }
+					? TypeMap[T["vec"]][]
+					: T extends { vec: keyof Defined }
+						? Defined[T["vec"]][]
+						: T extends { array: [defined: keyof TypeMap, size: number] }
+							? TypeMap[T["array"][0]][]
+							: unknown;
 
 /**
  * Interface to get instruction by name from IDL
