@@ -323,7 +323,7 @@ function decodeTokenInstruction(instruction: TransactionInstruction): ParsedInst
 			break;
 		}
 		case spl.TokenInstruction.SetAuthority: {
-			const decodedIx = spl.decodeSetAuthorityInstruction(instruction);
+			const decodedIx = spl.decodeSetAuthorityInstructionUnchecked(instruction);
 			const multisig = decodedIx.keys.multiSigners.map((meta, idx) => ({ name: `signer_${idx}`, ...meta }));
 			parsed = {
 				name: "setAuthority",
