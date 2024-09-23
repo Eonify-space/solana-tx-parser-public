@@ -519,6 +519,44 @@ export declare type SplToken = {
                     };
                 }
             ];
+        },
+        {
+            name: "getAccountDataSize";
+            accounts: [
+                {
+                    name: "mint";
+                    isMut: true;
+                    isSigner: false;
+                }
+            ];
+            args: [];
+        },
+        {
+            name: "initializeImmutableOwner";
+            accounts: [
+                {
+                    name: "account";
+                    isMut: false;
+                    isSigner: false;
+                }
+            ];
+            args: [];
+        },
+        {
+            name: "amountToUiAmount";
+            accounts: [
+                {
+                    name: "mint";
+                    isMut: true;
+                    isSigner: false;
+                }
+            ];
+            args: [
+                {
+                    name: "amount";
+                    type: "u64";
+                }
+            ];
         }
     ];
     accounts: [
